@@ -3,7 +3,7 @@
 	"schema": "v3",
 	"displayName": "RSEM",
 	"description": "RSEM is a software package for estimating gene and isoform expression levels from RNA-Seq data",
-	"title": "beichen1024/rsem", # use github repo username/repo
+	"title": "OanhFB/FB", # use github repo username/repo
 	"workflowVersion": "main",
 	"workflowLanguage": "wdl",
 	"categories": ["Genomics"],
@@ -16,8 +16,8 @@
 			"filetype": ".json",
 			"hidden": false,
 			"required": true,
-			"description": "JSON file containing WDL input values",
-			"help_text": "Visit https://github.com/beichen1024/rsem/tree/master?tab=readme-ov-file#inputs to check requirements."
+			"description": "JSON file containing WDL input values"#,
+			#"help_text": "Visit https://github.com/beichen1024/rsem/tree/master?tab=readme-ov-file#inputs to check requirements."
 		}
 	},
 	"ui": {
