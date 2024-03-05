@@ -1,0 +1,80 @@
+{
+	"id": "workflows",
+	"schema": "v3",
+	"displayName": "AMPLISEQ",
+	"description": "AMPLISEQ is a software for amplicon sequencing analysis",
+	"title": "tiendataxight/test",
+	"workflowVersion": "main",
+	"workflowLanguage": "nextflow",
+	"categories": ["Genomics"],
+	"config":{"mainScript":"main.nf"},
+	"inputs": {
+		"input": {
+			"type": "string",
+			"filetype": "text/tsv",
+			"fa_icon": "fas fa-dna",
+			"format": "file",
+			"description": "Path to tab-separated sample sheet",
+			"help_text": "Path to sample sheet, either tab-separated (.tsv), comma-separated (.csv), or in YAML format (.yml/.yaml), that points to compressed fastq files.\n\nThe sample sheet must have two to four tab-separated columns/entries with the following headers: \n- `sampleID` (required): Unique sample IDs, must start with a letter, and can only contain letters, numbers or underscores\n- `forwardReads` (required): Paths to (forward) reads zipped FastQ files\n- `reverseReads` (optional): Paths to reverse reads zipped FastQ files, required if the data is paired-end\n- `run` (optional): If the data was produced by multiple sequencing runs, any string\n\nRelated parameters are:\n- `--pacbio` and `--iontorrent` if the sequencing data is PacBio data or IonTorrent data (default expected: paired-end Illumina data)\n- `--single_end` if the sequencing data is single-ended Illumina data (default expected: paired-end Illumina data)\n- Choose an appropriate reference taxonomy for the type of amplicon (16S/18S/ITS/CO1) (default: DADA2 assignTaxonomy and 16S rRNA sequence database)",
+			"schema": "assets/schema_input.json"
+		},
+		"input_fasta": {
+			"type": "string",
+			"filetype": "text/tsv",
+			"format": "file",
+			"fa_icon": "fas fa-dna",
+			"description": "Path to ASV/OTU fasta file",
+			"help_text": "Path to fasta format file with sequences that will be taxonomically classified. The fasta file input option can be used to taxonomically classify previously produced ASV/OTU sequences.\n\nThe fasta sequence header line may contain a description, that will be kept as part of the sequence name. However, tabs will be changed into spaces.\n\nRelated parameters are:\n- Choose an appropriate reference taxonomy for the type of amplicon (16S/18S/ITS/CO1) (default: DADA2 assignTaxonomy and 16S rRNA sequence database)"
+		},
+		"input_folder": {
+			"type": "string",
+			"filetype": "text/tsv",
+			"format": "file",
+			"fa_icon": "fas fa-dna",
+			"description": "Path to folder containing zipped FastQ files",
+			"help_text": "Path to folder containing compressed fastq files.\n\nExample for input data organization from one sequencing run with two samples, paired-end data:\n\n```bash\ndata\n  \u251c\u2500sample1_1_L001_R1_001.fastq.gz\n  \u251c\u2500sample1_1_L001_R2_001.fastq.gz\n  \u251c\u2500sample2_1_L001_R1_001.fastq.gz\n  \u2514\u2500sample2_1_L001_R2_001.fastq.gz\n```\n\nPlease note the following requirements:\n\n1. The path must be enclosed in quotes\n2. The folder must contain gzip compressed demultiplexed fastq files. If the file names do not follow the default (`\"/*_R{1,2}_001.fastq.gz\"`), please check `--extension`.\n3. Sample identifiers are extracted from file names, i.e. the string before the first underscore `_`, these must be unique\n4. If your data is scattered, produce a sample sheet\n5. All sequencing data should originate from one sequencing run, because processing relies on run-specific error models that are unreliable when data from several sequencing runs are mixed. Sequencing data originating from multiple sequencing runs requires additionally the parameter `--multiple_sequencing_runs` and a specific folder structure.\n\nRelated parameters are:\n- `--pacbio` and `--iontorrent` if the sequencing data is PacBio data or IonTorrent data (default expected: paired-end Illumina data)\n- `--single_end` if the sequencing data is single-ended Illumina data (default expected: paired-end Illumina data)\n- `--multiple_sequencing_runs` if the sequencing data originates from multiple sequencing runs\n- `--extension` if the sequencing file names do not follow the default (`\"/*_R{1,2}_001.fastq.gz\"`)\n- Choose an appropriate reference taxonomy for the type of amplicon (16S/18S/ITS/CO1) (default: DADA2 assignTaxonomy and 16S rRNA sequence database)"
+		},
+		"FW_primer": {
+			"type": "string",
+			"description": "Forward primer sequence",
+			"help_text": "In amplicon sequencing methods, PCR with specific primers produces the amplicon of interest. These primer sequences need to be trimmed from the reads before further processing and are also required for producing an appropriate classifier. Do not use here any technical sequence such as adapter sequences but only the primer sequence that matches the biological amplicon.\n\nFor example:\n\n```bash\n--FW_primer \"GTGYCAGCMGCCGCGGTAA\" --RV_primer \"GGACTACNVGGGTWTCTAAT\"\n```",
+			"fa_icon": "fas fa-arrow-circle-right"
+		},
+		"RV_primer": {
+			"type": "string",
+			"description": "Reverse primer sequence",
+			"help_text": "In amplicon sequencing methods, PCR with specific primers produces the amplicon of interest. These primer sequences need to be trimmed from the reads before further processing and are also required for producing an appropriate classifier. Do not use here any technical sequence such as adapter sequences but only the primer sequence that matches the biological amplicon.\n\nFor example:\n\n```bash\n--FW_primer GTGYCAGCMGCCGCGGTAA --RV_primer GGACTACNVGGGTWTCTAAT\n```",
+			"fa_icon": "fas fa-arrow-alt-circle-left"
+		},
+		"dada_ref_taxonomy": {
+            "title": "DADA2 ref tax db",
+            "type": "array",
+			"description": "Name of supported database, and optionally also version number",
+			"uniqueItems": true,
+			"default": ["coidb"],
+            "items": [
+					{"id": "coidb", "name": "coidb"},
+					{"id": "gtdb", "name": "gtdb"},
+					{"id": "midori2-col1", "name": "midori2-co1"},
+					{"id": "phytoref", "name": "phytoref"},
+					{"id": "pr2", "name": "pr2"},
+					{"id": "rdp", "name": "rdp"},
+					{"id": "sbdi", "name": "sbdi-gtdb"},
+					{"id": "silva", "name": "silva"},
+					{"id": "unite-alleuk", "name": "unite-alleuk"},
+					{"id": "unite-fungi", "name": "unite-fungi"},
+					{"id": "zehr-nifh", "name": "zehr-nifh"}
+			]
+        }
+	},
+	"ui": {
+		"inputs": [
+			{
+				"id": "input",
+			  	"title": "Input",
+				"fields": ["input", "input_fasta", "FW_primer", "RV_primer", "dada_ref_taxonomy"],
+			  	"hidden": false
+			}
+		]
+	}
+}
