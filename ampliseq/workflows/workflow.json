@@ -1,0 +1,32 @@
+{
+	"id": "workflows",
+	"schema": "v3",
+	"displayName": "AMPLISEQ",
+	"description": "AMPLISEQ is a software for amplicon sequencing analysis",
+	"title": "tienformbio/workflows",
+	"workflowVersion": "main",
+	"workflowLanguage": "nf",
+	"categories": ["Genomics"],
+	"config":{"mainScript":"main.nf"},
+	"inputs": {
+		"nfJSON": {
+			"title": "Input File",
+			"type": "string",
+			"format": "file",
+			"filetype": ".json",
+			"hidden": false,
+			"required": true,
+			"description": "JSON file containing NF input values"
+		}
+	},
+	"ui": {
+		"inputs": [
+			{
+				"id": "inputFileGroup",
+			  	"title": "Inputs",
+				"fields": ["nfJSON"],
+			  	"hidden": false
+			}
+		]
+	}
+}
